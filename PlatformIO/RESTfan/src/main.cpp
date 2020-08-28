@@ -17,7 +17,7 @@ const char* wifi_passwd = "highsecuritypassword";
 ESP8266WebServer http_rest_server(HTTP_REST_PORT);
 
 int speed = 0;
-bool osccilation = false;
+bool oscillation = false;
 
 int init_wifi() {
     int retries = 0;
@@ -39,7 +39,7 @@ void send_state() {
     StaticJsonDocument<200> doc;
     char JSONmessageBuffer[200];
     doc["speed"] = speed;
-    doc["osccilation"] = osccilation;
+    doc["oscillation"] = oscillation;
     serializeJsonPretty(doc, JSONmessageBuffer);
     http_rest_server.send(200, "application/json", JSONmessageBuffer);
 }
@@ -62,7 +62,7 @@ void off() {
     digitalWrite(FAN_SPEED_3, LOW);
     digitalWrite(OSCILLATION, LOW);
     speed = 0;
-    osccilation = false;
+    oscillation = false;
     send_state();
 }
 
@@ -92,13 +92,13 @@ void speed_3() {
 
 void oscillation_on() {
     digitalWrite(OSCILLATION, HIGH);
-    osccilation = true;
+    oscillation = true;
     send_state();
 }
 
 void oscillation_off() {
     digitalWrite(OSCILLATION, LOW);
-    osccilation = false;
+    oscillation = false;
     send_state();
 }
 
@@ -112,15 +112,15 @@ void config_rest_server_routing() {
     http_rest_server.on("/speed/1", HTTP_GET, speed_1);
     http_rest_server.on("/speed/2", HTTP_GET, speed_2);
     http_rest_server.on("/speed/3", HTTP_GET, speed_3);
-    http_rest_server.on("/osccilation/on", HTTP_GET, oscillation_on);
-    http_rest_server.on("/osccilation/off", HTTP_GET, oscillation_off);
+    http_rest_server.on("/oscillation/on", HTTP_GET, oscillation_on);
+    http_rest_server.on("/oscillation/off", HTTP_GET, oscillation_off);
 }
 
 void setup(void) {
     init_relays();
 
     Serial.begin(115200);
-    
+
     if (init_wifi() == WL_CONNECTED) {
         Serial.print("Connected to ");
         Serial.print(wifi_ssid);
