@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ESP8266WebServer.h>
 #include <ArduinoJson.h>
+#include "secret.h"
 
 #define HTTP_REST_PORT 80
 #define WIFI_RETRY_DELAY 500
@@ -11,8 +12,8 @@
 #define FAN_SPEED_3 0
 #define OSCILLATION 2
 
-const char* wifi_ssid = "reaktor23";
-const char* wifi_passwd = "highsecuritypassword";
+//const char* wifi_ssid = "reaktor23";
+//const char* wifi_passwd = "highsecuritypassword";
 
 ESP8266WebServer http_rest_server(HTTP_REST_PORT);
 
@@ -54,6 +55,7 @@ void init_relays() {
     digitalWrite(FAN_SPEED_2, LOW);
     digitalWrite(FAN_SPEED_3, LOW);
     digitalWrite(OSCILLATION, LOW);
+    delay(100);
 }
 
 void off() {
@@ -64,42 +66,51 @@ void off() {
     speed = 0;
     oscillation = false;
     send_state();
+    delay(100);
 }
 
 void speed_1() {
     digitalWrite(FAN_SPEED_2, LOW);
     digitalWrite(FAN_SPEED_3, LOW);
+    delay(100);
     digitalWrite(FAN_SPEED_1, HIGH);
     speed = 1;
     send_state();
+    delay(100);
 }
 
 void speed_2() {
     digitalWrite(FAN_SPEED_1, LOW);
     digitalWrite(FAN_SPEED_3, LOW);
+    delay(100);
     digitalWrite(FAN_SPEED_2, HIGH);
     speed = 2;
     send_state();
+    delay(100);
 }
 
 void speed_3() {
     digitalWrite(FAN_SPEED_1, LOW);
     digitalWrite(FAN_SPEED_2, LOW);
+    delay(100);
     digitalWrite(FAN_SPEED_3, HIGH);
     speed = 3;
     send_state();
+    delay(100);
 }
 
 void oscillation_on() {
     digitalWrite(OSCILLATION, HIGH);
     oscillation = true;
     send_state();
+    delay(100);
 }
 
 void oscillation_off() {
     digitalWrite(OSCILLATION, LOW);
     oscillation = false;
     send_state();
+    delay(100);
 }
 
 void config_rest_server_routing() {
@@ -108,12 +119,20 @@ void config_rest_server_routing() {
             "Welcome to RESTfan");
     });
     http_rest_server.on("/state", HTTP_GET, send_state);
+    /*
     http_rest_server.on("/off", HTTP_GET, off);
     http_rest_server.on("/speed/1", HTTP_GET, speed_1);
     http_rest_server.on("/speed/2", HTTP_GET, speed_2);
     http_rest_server.on("/speed/3", HTTP_GET, speed_3);
     http_rest_server.on("/oscillation/on", HTTP_GET, oscillation_on);
     http_rest_server.on("/oscillation/off", HTTP_GET, oscillation_off);
+    */
+    http_rest_server.on("/off", HTTP_POST, off);
+    http_rest_server.on("/speed/1", HTTP_POST, speed_1);
+    http_rest_server.on("/speed/2", HTTP_POST, speed_2);
+    http_rest_server.on("/speed/3", HTTP_POST, speed_3);
+    http_rest_server.on("/oscillation/on", HTTP_POST, oscillation_on);
+    http_rest_server.on("/oscillation/off", HTTP_POST, oscillation_off);
 }
 
 void setup(void) {

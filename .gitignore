@@ -1,4 +1,5 @@
 PlatformIO/RESTfan/lib
 PlatformIO/RESTfan/test
 PlatformIO/RESTfan/include
+PlatformIO/RESTfan/src/secret.h
 
