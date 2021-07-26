@@ -1,9 +1,7 @@
 ---
-substitutions:
-  oscillation_pin: GPIO2
-
 esphome:
   name: restfan
+  upper_devicename: RESTfan
   platform: ESP8266
   board: d1_mini
   includes:
@@ -30,73 +28,13 @@ output:
       return {rest_fan};
 
   - platform: gpio
-    pin: $oscillation_pin
+    pin: GPIO2
     id: oscillation_output
-
-    
-      #switch:
-      #  - platform: template    
-      #    id: update_fan_speed
-      #    optimistic: True
-      #    turn_on_action:
-      #      then:
-      #        - delay: 200ms
-      #        - if:
-      #            condition:
-      #              and:
-      #                - switch.is_off: fan_relay1
-      #                - switch.is_off: fan_relay2
-      #                - switch.is_off: fan_relay3
-      #            then:
-      #              - fan.turn_off: ifan02_fan
-      #        - if:
-      #            condition:
-      #              and:
-      #                - switch.is_on: fan_relay1
-      #                - switch.is_off: fan_relay2
-      #                - switch.is_off: fan_relay3
-      #            then:
-      #              - fan.turn_on:
-      #                  id: ifan02_fan
-      #                  speed: LOW
-      #        - if:
-      #            condition:
-      #              and:
-      #                - switch.is_on: fan_relay1
-      #                - switch.is_on: fan_relay2
-      #                - switch.is_off: fan_relay3
-      #            then:
-      #              - fan.turn_on:
-      #                  id: ifan02_fan
-      #                  speed: MEDIUM
-      #        - if:
-      #            condition:
-      #              and:
-      #                - switch.is_on: fan_relay1
-      #                - switch.is_off: fan_relay2
-      #                - switch.is_on: fan_relay3
-      #            then:
-      #              - fan.turn_on:
-      #                  id: ifan02_fan
-      #                  speed: HIGH
-      #        - switch.turn_off: update_fan_speed
-      #
-      #  - platform: gpio
-      #    pin: GPIO5
-      #    id: fan_relay1
-      #
-      #  - platform: gpio
-      #    pin: GPIO4
-      #    id: fan_relay2
-      #
-      #  - platform: gpio
-      #    pin: GPIO15
-      #    id: fan_relay3
-
 
 fan:
   - platform: speed
     output: fanspeed_output
     oscillation_output: oscillation_output 
+    speed_count: 3
     id: restfan
     name: "RESTfan"
